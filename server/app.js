@@ -4,6 +4,7 @@ const schema = require('./schema/schema');
 const mongoose = require('mongoose')
 const db = require('./config/keys')
 const cors = require('cors');
+require('dotenv').config()
 
 const app = express();
 
@@ -11,7 +12,7 @@ const app = express();
 app.use(cors());
 
 //connect to mongo database
-mongoose.connect(db.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(db.mongoURI || 'mongodb://localhost/onur-playlist', { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => console.log('connected to database'));
 
 app.use('/graphql', graphqlHTTP({
@@ -19,6 +20,4 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true
 }));
 
-app.listen(4000, () => {
-  console.log('now listening for requests on port 4000');
-})
+app.listen(process.env.PORT || 4000)
